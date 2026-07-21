@@ -1,0 +1,42 @@
+---
+---
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">artigos<span class="dot">.</span>dev</a>
+    <nav class="site-nav">
+      <a href="/sobre/">sobre</a>
+      <a href="/rss.xml">rss</a>
+      <button id="theme-toggle" class="theme-toggle" type="button" aria-label="Alternar tema">
+        <span data-theme-label>tema</span>
+      </button>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const ORDEM = ['light', 'dark', 'system'];
+  const ROTULOS: Record<string, string> = { light: 'claro', dark: 'escuro', system: 'sistema' };
+
+  function modoAtual() {
+    return localStorage.getItem('theme') || 'system';
+  }
+
+  function aplicarTema(modo: string) {
+    const efetivo =
+      modo === 'system'
+        ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+        : modo;
+    document.documentElement.setAttribute('data-theme', efetivo);
+  }
+
+  const btn = document.getElementById('theme-toggle');
+  const label = btn?.querySelector('[data-theme-label]');
+  if (label) label.textContent = ROTULOS[modoAtual()];
+
+  btn?.addEventListener('click', () => {
+    const proximo = ORDEM[(ORDEM.indexOf(modoAtual()) + 1) % ORDEM.length];
+    localStorage.setItem('theme', proximo);
+    if (label) label.textContent = ROTULOS[proximo];
+    aplicarTema(proximo);
+  });
+</script>

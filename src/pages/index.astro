@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const todosPosts = await getCollection('blog', ({ data }) => !data.draft);
+const posts = todosPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+const destaques = posts.slice(0, 5);
+
+// Agrupa por "Ano - Mês" (ex: "2026 - Julho"), preservando a ordem
+// (mais recente primeiro) em que os grupos aparecem.
+const grupos = new Map();
+for (const post of posts) {
+  const d = post.data.pubDate;
+  const mes = d.toLocaleDateString('pt-BR', { month: 'long' });
+  const chave = `${d.getFullYear()} - ${mes.charAt(0).toUpperCase() + mes.slice(1)}`;
+  if (!grupos.has(chave)) grupos.set(chave, []);
+  grupos.get(chave).push(post);
+}
+
+function dataCurta(d: Date) {
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+---
+<BaseLayout title="artigos.dev — eletrônica e sistemas embarcados">
+  <div class="wrap">
+    <section class="intro">
+      <h1>artigos.dev</h1>
+      <p>
+        Anotações sobre os projetos, problemas e soluções que encontro
+        trabalhando com eletrônica e sistemas embarcados.
+      </p>
+    </section>
+
+    {destaques.length > 0 && (
+      <section class="highlights">
+        <h2>Destaques</h2>
+        <ul>
+          {destaques.map((post) => (
+            <li>
+              <span class="date">{dataCurta(post.data.pubDate)}</span>
+              <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )}
+
+    {[...grupos.entries()].map(([chave, postsDoGrupo]) => (
+      <section class="archive-group">
+        <h2>{chave}</h2>
+        <ul class="archive-list">
+          {postsDoGrupo.map((post) => (
+            <li class="archive-item">
+              <span class="date">{dataCurta(post.data.pubDate)}</span>
+              <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))}
+
+    {posts.length === 0 && <p class="post-meta">Nenhum artigo publicado ainda.</p>}
+  </div>
+</BaseLayout>
