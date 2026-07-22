@@ -47,9 +47,9 @@ Onde cada termo tem um papel específico no controle.
 
 O termo proporcional reage ao erro atual.
 
-[
+
 P = Kp × erro
-]
+
 
 * Quanto maior o erro → maior a ação de controle
 * É a parte principal do PID
@@ -69,9 +69,9 @@ Pode causar **erro residual** (nunca chega exatamente no alvo).
 
 O termo integral acumula o erro ao longo do tempo.
 
-[
+
 I = Ki × ∫ erro dt
-]
+
 
 ### Intuição:
 
@@ -93,9 +93,9 @@ Se o sistema está “errando há muito tempo”, ele aumenta a correção.
 
 O termo derivativo reage à **velocidade do erro** (como ele está mudando).
 
-[
+
 D = Kd × d(erro) / dt
-]
+
 
 ### Intuição:
 
@@ -127,9 +127,9 @@ Imagine controlar a temperatura de um chuveiro:
 
 ## Fórmula completa
 
-[
+
 u(t) = Kp × e(t) + Ki × ∫ e(t) dt + Kd × de(t) / dt
-]
+
 
 Onde:
 
