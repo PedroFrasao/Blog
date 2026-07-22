@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { slugifyTag } from '../../utils/slugifyTag';
+
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+// Conta quantos posts cada tag tem
+const contagem = new Map<string, number>();
+for (const post of posts) {
+  for (const tag of post.data.tags) {
+    contagem.set(tag, (contagem.get(tag) ?? 0) + 1);
+  }
+}
+const tags = [...contagem.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+---
+<BaseLayout title="Tags — artigos.dev">
+  <div class="wrap">
+    <section class="intro">
+      <h1>Tags</h1>
+      <p>Todos os assuntos já cobertos no blog.</p>
+    </section>
+
+    <ul class="tag-cloud">
+      {tags.map(([tag, count]) => (
+        <li>
+          <a href={`/tags/${slugifyTag(tag)}/`}>
+            #{tag} <span class="tag-count">{count}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    {tags.length === 0 && <p class="post-meta">Nenhuma tag ainda.</p>}
+  </div>
+</BaseLayout>

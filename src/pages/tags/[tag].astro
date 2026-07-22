@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { slugifyTag } from '../../utils/slugifyTag';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  // Mapeia cada slug de tag para o nome "bonito" original + posts que a usam
+  const porSlug = new Map<string, { nome: string; posts: typeof posts }>();
+  for (const post of posts) {
+    for (const tag of post.data.tags) {
+      const slug = slugifyTag(tag);
+      if (!porSlug.has(slug)) porSlug.set(slug, { nome: tag, posts: [] });
+      porSlug.get(slug)!.posts.push(post);
+    }
+  }
+
+  return [...porSlug.entries()].map(([slug, { nome, posts }]) => ({
+    params: { tag: slug },
+    props: {
+      nome,
+      posts: posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+const { nome, posts } = Astro.props;
+
+function dataCurta(d: Date) {
+  return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+}
+---
+<BaseLayout title={`#${nome} — artigos.dev`}>
+  <div class="wrap">
+    <section class="intro">
+      <p class="post-meta"><a href="/tags/">← todas as tags</a></p>
+      <h1>#{nome}</h1>
+      <p>{posts.length} artigo{posts.length === 1 ? '' : 's'} com essa tag.</p>
+    </section>
+
+    <ul class="archive-list" style="padding: 1.5rem 0;">
+      {posts.map((post) => (
+        <li class="archive-item">
+          <span class="date">{dataCurta(post.data.pubDate)}</span>
+          <a href={`/blog/${post.slug}/`}>{post.data.title}</a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</BaseLayout>
