@@ -48,7 +48,9 @@ Onde cada termo tem um papel específico no controle.
 O termo proporcional reage ao erro atual.
 
 [
-$P = K_p \cdot erro$
+$$
+P = K_p \cdot erro
+$$
 ]
 
 * Quanto maior o erro → maior a ação de controle
