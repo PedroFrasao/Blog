@@ -48,9 +48,7 @@ Onde cada termo tem um papel específico no controle.
 O termo proporcional reage ao erro atual.
 
 [
-$$
-P = K_p \cdot erro
-$$
+P = Kp × erro
 ]
 
 * Quanto maior o erro → maior a ação de controle
@@ -72,7 +70,7 @@ Pode causar **erro residual** (nunca chega exatamente no alvo).
 O termo integral acumula o erro ao longo do tempo.
 
 [
-I = K_i \cdot \int erro , dt
+I = Ki × ∫ erro dt
 ]
 
 ### Intuição:
@@ -96,7 +94,7 @@ Se o sistema está “errando há muito tempo”, ele aumenta a correção.
 O termo derivativo reage à **velocidade do erro** (como ele está mudando).
 
 [
-D = K_d \cdot \frac{d(erro)}{dt}
+D = Kd × d(erro) / dt
 ]
 
 ### Intuição:
@@ -130,7 +128,7 @@ Imagine controlar a temperatura de um chuveiro:
 ## Fórmula completa
 
 [
-u(t) = K_p \cdot e(t) + K_i \cdot \int e(t),dt + K_d \cdot \frac{de(t)}{dt}
+u(t) = Kp × e(t) + Ki × ∫ e(t) dt + Kd × de(t) / dt
 ]
 
 Onde:
@@ -197,15 +195,4 @@ Apesar de simples, é extremamente poderoso e está presente em inúmeros sistem
 
 ---
 
-## Próximos passos
 
-Possíveis evoluções:
-
-* Implementar PID em um Arduino (controle de motor ou temperatura)
-* Visualizar resposta com gráficos
-* Estudar controle em malha fechada
-* Explorar filtros para o termo derivativo
-
----
-
-Este é um tema fundamental — dominar PID abre portas para sistemas embarcados, robótica e controle em geral.
