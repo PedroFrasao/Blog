@@ -16,6 +16,14 @@
   --accent-2: #3d7a5c;  /* verde-trilha */
 }
 
+img {
+  max-width: 400px; /* diminui aqui */
+  width: 100%;
+  height: auto;     /* garante proporção */
+  display: block;
+  margin: 2rem auto;
+}
+
 html[data-theme='dark'] {
   --bg: #111113;
   --bg-elevated: #1a1a1d;
